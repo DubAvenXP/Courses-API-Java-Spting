@@ -1,14 +1,16 @@
-package com.company.backendcourses.persistence.repository;
+package com.company.backendcourses.service;
 
 import com.company.backendcourses.persistence.crud.UserCrudRepository;
 import com.company.backendcourses.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class UserRepository {
+@Service
+public class UserService {
 
     @Autowired
     private UserCrudRepository userCrudRepository;
@@ -21,8 +23,8 @@ public class UserRepository {
         return (List<User>) userCrudRepository.findByStatus("1");
     }
 
-    public void createUser(User user) {
-        userCrudRepository.save(user);
+    public User createUser(User user)  {
+        return userCrudRepository.save(user);
     }
     
     public Optional<User> updateUser(User user, Integer id) {
@@ -37,10 +39,11 @@ public class UserRepository {
         });
     }
 
-    public void deleteUser(@PathVariable Integer id) {
-        userCrudRepository.findById(id).map(userToUpdate -> {
+    public boolean deleteUser(@PathVariable Integer id) {
+        return userCrudRepository.findById(id).map(userToUpdate -> {
             userToUpdate.setStatus("0");
-            return userCrudRepository.save(userToUpdate);
-        });
+            userCrudRepository.save(userToUpdate);
+            return true;
+        }).orElse(false);
     }
 }
