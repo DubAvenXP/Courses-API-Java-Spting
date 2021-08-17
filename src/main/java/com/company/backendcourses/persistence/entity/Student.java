@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "students")
@@ -28,7 +29,7 @@ public class Student {
     @Getter @Setter
     private String password;
 
-    /*@OneToMany(mappedBy = "student")
-    private List<StudentCourse> studentCourseList;*/
+    @OneToMany(mappedBy = "student")
+    private List<StudentCourses> studentCourses;
 
 }

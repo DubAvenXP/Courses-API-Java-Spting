@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -42,5 +43,9 @@ public class Course {
     @ManyToOne
     @Getter @Setter @JoinColumn(name = "id_user", insertable = false, updatable = false)
     private User user;
+
+    @OneToMany(mappedBy = "course")
+    private List<StudentCourses> studentCourses;
+
 }
 
