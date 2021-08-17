@@ -1,5 +1,6 @@
 package com.company.backendcourses.service;
 
+import com.company.backendcourses.helpers.CarnetGenerator;
 import com.company.backendcourses.persistence.crud.CourseCrudRepository;
 import com.company.backendcourses.persistence.entity.Course;
 import org.springframework.beans.factory.annotation.Autowired;
