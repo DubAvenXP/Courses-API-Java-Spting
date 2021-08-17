@@ -16,9 +16,6 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    private UserCrudRepository crud;
-
-    @Autowired
     private UserService userService;
 
     @GetMapping(value = "/user/{id}")

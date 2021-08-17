@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -46,5 +47,7 @@ public class User {
     @Getter @Setter @JoinColumn(name = "id_role", insertable = false, updatable = false)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Course> courses;
 
 }
