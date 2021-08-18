@@ -1,5 +1,6 @@
 package com.company.backendcourses.persistence.entity;
 
+import com.company.backendcourses.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

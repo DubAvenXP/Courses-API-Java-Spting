@@ -1,30 +1,43 @@
 package com.company.backendcourses.web.controllers;
 
+import com.company.backendcourses.dto.CourseDto;
+import com.company.backendcourses.dto.StudentDto;
 import com.company.backendcourses.persistence.entity.Course;
 import com.company.backendcourses.persistence.entity.Student;
 import com.company.backendcourses.service.StudentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api")
 public class StudentController {
 
     @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
     private StudentService studentService;
 
     @GetMapping(value = "/student/{id}")
-    public ResponseEntity<Student> getCourse(@PathVariable String id) {
-        return ResponseEntity.of(studentService.getStudent(id));
+    public ResponseEntity<StudentDto> getCourse(@PathVariable String id) {
+        Student student = studentService.getStudent(id);
+        StudentDto response = modelMapper.map(student, StudentDto.class);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping(value = "/student")
-    public ResponseEntity<List<Student>> getCourse() {
-        return new ResponseEntity<>(studentService.getStudents(), HttpStatus.OK);
+    public ResponseEntity<List<StudentDto>> getCourse() {
+        List<StudentDto> students = studentService.getStudents().stream()
+                .map(student -> modelMapper.map(student, StudentDto.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @PostMapping(value = "/student")

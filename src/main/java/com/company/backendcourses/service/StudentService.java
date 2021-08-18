@@ -17,8 +17,13 @@ public class StudentService {
     @Autowired
     private StudentCrudRepository studentCrudRepository;
 
-    public Optional<Student> getStudent(String id) {
-        return studentCrudRepository.findById(id);
+    public Student getStudent(String id) {
+        Optional<Student> result = studentCrudRepository.findById(id);
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            throw new IllegalStateException("User not found");
+        }
     }
 
     public List<Student> getStudents() {

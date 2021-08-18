@@ -3,6 +3,7 @@ package com.company.backendcourses.service;
 import com.company.backendcourses.helpers.CarnetGenerator;
 import com.company.backendcourses.persistence.crud.CourseCrudRepository;
 import com.company.backendcourses.persistence.entity.Course;
+import com.company.backendcourses.persistence.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +17,13 @@ public class CourseService {
     @Autowired
     private CourseCrudRepository courseCrudRepository;
 
-    public Optional<Course> getCourse(Integer id) {
-        return courseCrudRepository.findById(id);
+    public Course getCourse(Integer id) {
+        Optional<Course> result = courseCrudRepository.findById(id);
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            throw new IllegalStateException("User not found");
+        }
     }
 
     public List<Course> getCourses() {

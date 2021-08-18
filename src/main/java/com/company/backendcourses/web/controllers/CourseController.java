@@ -1,30 +1,43 @@
 package com.company.backendcourses.web.controllers;
 
+import com.company.backendcourses.dto.CourseDto;
+import com.company.backendcourses.dto.UserDto;
 import com.company.backendcourses.persistence.entity.Course;
 import com.company.backendcourses.persistence.entity.User;
 import com.company.backendcourses.service.CourseService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api")
 public class CourseController {
 
     @Autowired
+    private ModelMapper modelmapper;
+
+    @Autowired
     private CourseService courseService;
 
     @GetMapping(value = "/course/{id}")
-    public ResponseEntity<Course> getCourse(@PathVariable Integer id) {
-        return ResponseEntity.of(courseService.getCourse(id));
+    public ResponseEntity<CourseDto> getCourse(@PathVariable Integer id) {
+        Course course = courseService.getCourse(id);
+        CourseDto courseResponse = modelmapper.map(course, CourseDto.class);
+        return ResponseEntity.ok().body(courseResponse);
     }
 
     @GetMapping(value = "/course")
-    public ResponseEntity<List<Course>> getCourse() {
-        return new ResponseEntity<>(courseService.getCourses(), HttpStatus.OK);
+    public ResponseEntity<List<CourseDto>> getCourse() {
+        List<CourseDto> courses = courseService.getCourses().stream()
+                .map(course -> modelmapper.map(course, CourseDto.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @PostMapping(value = "/course")

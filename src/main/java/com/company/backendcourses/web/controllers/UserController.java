@@ -1,8 +1,9 @@
 package com.company.backendcourses.web.controllers;
 
-import com.company.backendcourses.persistence.crud.UserCrudRepository;
+import com.company.backendcourses.dto.UserDto;
 import com.company.backendcourses.persistence.entity.User;
 import com.company.backendcourses.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,22 +11,33 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api")
 public class UserController {
 
     @Autowired
+    private ModelMapper modelmapper;
+
+    @Autowired
     private UserService userService;
 
     @GetMapping(value = "/user/{id}")
-    public ResponseEntity<User> getUsuario(@PathVariable Integer id) {
-        return ResponseEntity.of(userService.getUser(id));
+    public ResponseEntity<UserDto> getUser(@PathVariable Integer id) {
+        User user = userService.getUser(id);
+        UserDto userResponse = modelmapper.map(user, UserDto.class);
+        return ResponseEntity.ok().body(userResponse);
     }
 
     @GetMapping(value = "/user")
-    public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> getUsers() {
+
+        List<UserDto> users = userService.getUsers().stream()
+                .map(user -> modelmapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @PostMapping(value = "/user")

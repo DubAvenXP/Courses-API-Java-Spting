@@ -20,7 +20,7 @@ public class StudentCoursesService {
     }
 
     public List<StudentCourses> getStudentsByCourse(Integer id) {
-        return (List<StudentCourses>) crud.findByIdCourse(id);
+        return (List<StudentCourses>) crud.findByIdCourseAndStatus(id, "1");
     }
 
     public List<StudentCourses> getAll() {

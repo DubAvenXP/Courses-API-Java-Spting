@@ -15,8 +15,14 @@ public class UserService {
     @Autowired
     private UserCrudRepository userCrudRepository;
 
-    public Optional<User> getUser(Integer id) {
-        return userCrudRepository.findById(id);
+    public User getUser(Integer id) {
+        Optional<User> result = userCrudRepository.findById(id);
+
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            throw new IllegalStateException("User not found");
+        }
     }
 
     public List<User> getUsers() {
