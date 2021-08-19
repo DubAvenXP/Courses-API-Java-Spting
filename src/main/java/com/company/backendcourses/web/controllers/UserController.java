@@ -74,6 +74,7 @@ public class UserController {
 
     @DeleteMapping(value = "/user/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable Integer id, @RequestHeader(value = "Authorization") String token) {
+        //TODO: proteger rutas
         /*if (jwtUtil.getKey(token) == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }*/
