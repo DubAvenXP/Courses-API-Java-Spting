@@ -29,6 +29,15 @@ public class UserService {
         return (List<User>) userCrudRepository.findByStatus("1");
     }
 
+    public User getUserByEmail(String email) {
+        Optional<User> result = userCrudRepository.findByStatusAndAndEmail("1", email);
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            throw new IllegalStateException("User not found");
+        }
+    }
+
     public User createUser(User user)  {
         return userCrudRepository.save(user);
     }

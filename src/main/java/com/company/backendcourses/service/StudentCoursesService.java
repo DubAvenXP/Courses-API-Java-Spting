@@ -15,7 +15,7 @@ public class StudentCoursesService {
     @Autowired
     private StudentCoursesCrudRepository crud;
 
-    public List<StudentCourses> getStudentCourses(String id) {
+    public List<StudentCourses> getCoursesByStudent(String id) {
         return (List<StudentCourses>) crud.findByIdStudent(id);
     }
 

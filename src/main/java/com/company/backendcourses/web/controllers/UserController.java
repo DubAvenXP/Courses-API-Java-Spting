@@ -1,8 +1,15 @@
 package com.company.backendcourses.web.controllers;
 
 import com.company.backendcourses.dto.UserDto;
+import com.company.backendcourses.helpers.JWTUtil;
 import com.company.backendcourses.persistence.entity.User;
 import com.company.backendcourses.service.UserService;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api")
+//@RequestMapping(value = "/api")
 public class UserController {
 
     @Autowired
@@ -23,14 +30,27 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JWTUtil jwtUtil;
+
     @GetMapping(value = "/user/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Integer id) {
+    @ApiOperation("Search user by ID")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "User not found")
+    })
+    public ResponseEntity<UserDto> getUser(
+            @ApiParam(value = "The id of the user", required = true, example = "1")
+            @PathVariable Integer id) {
+
         User user = userService.getUser(id);
         UserDto userResponse = modelmapper.map(user, UserDto.class);
         return ResponseEntity.ok().body(userResponse);
     }
 
     @GetMapping(value = "/user")
+    @ApiOperation("Get all users")
+    @ApiResponse(code = 200, message = "OK")
     public ResponseEntity<List<UserDto>> getUsers() {
 
         List<UserDto> users = userService.getUsers().stream()
@@ -42,6 +62,8 @@ public class UserController {
 
     @PostMapping(value = "/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        user.setPassword(argon2.hash(7, 1024, 2, user.getPassword()));
         return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
     }
 
@@ -51,7 +73,10 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/user/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<User> deleteUser(@PathVariable Integer id, @RequestHeader(value = "Authorization") String token) {
+        /*if (jwtUtil.getKey(token) == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }*/
         if (userService.deleteUser(id)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api")
+//@RequestMapping(value = "/api")
 public class StudentCoursesController {
 
     @Autowired
@@ -24,8 +24,8 @@ public class StudentCoursesController {
     private StudentCoursesService service;
 
     @GetMapping(value = "/studentcourses/{id}")
-    public ResponseEntity<List<CoursesByStudentDto>> getStudentCourses(@PathVariable String id) {
-        List<CoursesByStudentDto> response = service.getStudentCourses(id).stream()
+    public ResponseEntity<List<CoursesByStudentDto>> getCoursesByStudent(@PathVariable String id) {
+        List<CoursesByStudentDto> response = service.getCoursesByStudent(id).stream()
                 .map(studentcourses -> modelMapper.map(studentcourses, CoursesByStudentDto.class))
                 .collect(Collectors.toList());
 

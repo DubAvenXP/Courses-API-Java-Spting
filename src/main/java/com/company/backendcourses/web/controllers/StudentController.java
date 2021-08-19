@@ -5,6 +5,8 @@ import com.company.backendcourses.dto.StudentDto;
 import com.company.backendcourses.persistence.entity.Course;
 import com.company.backendcourses.persistence.entity.Student;
 import com.company.backendcourses.service.StudentService;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "/api")
+//@RequestMapping(value = "/api")
 public class StudentController {
 
     @Autowired
@@ -42,6 +44,8 @@ public class StudentController {
 
     @PostMapping(value = "/student")
     public ResponseEntity<Student> createCourse(@RequestBody Student student) {
+        Argon2 argon2 = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        student.setPassword(argon2.hash(7, 1024, 2, student.getPassword()));
         return new ResponseEntity<>(studentService.createStudent(student), HttpStatus.CREATED);
     }
 
