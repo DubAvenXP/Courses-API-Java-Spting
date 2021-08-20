@@ -1,1 +1,1 @@
-web: java -jar target/BackendCourses-1.0.0-SNAPSHOT.jar
+web: java -jar -Dspring.profiles.active=pdn target/BackendCourses-1.0.0-SNAPSHOT.jar

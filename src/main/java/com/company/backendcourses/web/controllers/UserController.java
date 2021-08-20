@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-//@RequestMapping(value = "/api")
+@CrossOrigin
 public class UserController {
 
     @Autowired
